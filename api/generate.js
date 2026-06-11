@@ -12,11 +12,12 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
+        system: 'Você extrai informações de textos e retorna APENAS JSON válido, sem explicações, sem markdown, sem blocos de código.',
         messages: [{ role: 'user', content: prompt }],
       }),
     });
     const data = await response.json();
-    const text = data.content?.map(b => b.text).join('') || '';
+    const text = data.content?.[0]?.text || '{}';
     res.status(200).json({ text });
   } catch (err) {
     res.status(500).json({ error: err.message });
